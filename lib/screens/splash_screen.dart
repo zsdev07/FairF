@@ -30,18 +30,25 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // TODO: swap this for the actual FairF logo asset.
-            Text(
-              'FairF',
-              style: TextStyle(
-                color: FairFColors.textPrimary,
-                fontSize: 56,
-                fontWeight: FontWeight.w900,
-                letterSpacing: 1.5,
-                shadows: [
-                  Shadow(color: FairFColors.cyan.withOpacity(0.6), blurRadius: 24),
-                ],
-              ),
+            Image.asset(
+              'assets/logo.png',
+              width: 280,
+              fit: BoxFit.contain,
+              errorBuilder: (context, error, stackTrace) {
+                // Falls back to text if logo.png isn't committed to the repo yet.
+                return Text(
+                  'FairF',
+                  style: TextStyle(
+                    color: FairFColors.textPrimary,
+                    fontSize: 56,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 1.5,
+                    shadows: [
+                      Shadow(color: FairFColors.cyan.withOpacity(0.6), blurRadius: 24),
+                    ],
+                  ),
+                );
+              },
             ),
             const SizedBox(height: 16),
             const CircularProgressIndicator(color: FairFColors.yellow),
