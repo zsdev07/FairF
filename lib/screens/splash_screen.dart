@@ -26,17 +26,16 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: FairFColors.background,
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Image.asset(
-              'assets/logo.png',
-              width: 280,
-              fit: BoxFit.contain,
-              errorBuilder: (context, error, stackTrace) {
-                // Falls back to text if logo.png isn't committed to the repo yet.
-                return Text(
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          // Full-bleed logo — it already has its own dark textured background baked in.
+          Image.asset(
+            'assets/logo.png',
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return Center(
+                child: Text(
                   'FairF',
                   style: TextStyle(
                     color: FairFColors.textPrimary,
@@ -47,13 +46,19 @@ class _SplashScreenState extends State<SplashScreen> {
                       Shadow(color: FairFColors.cyan.withOpacity(0.6), blurRadius: 24),
                     ],
                   ),
-                );
-              },
+                ),
+              );
+            },
+          ),
+          Positioned(
+            bottom: 40,
+            left: 0,
+            right: 0,
+            child: const Center(
+              child: CircularProgressIndicator(color: FairFColors.yellow),
             ),
-            const SizedBox(height: 16),
-            const CircularProgressIndicator(color: FairFColors.yellow),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
