@@ -1,0 +1,31 @@
+name: Build FairF APK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Scaffold Android platform folder (only fills what's missing)
+        run: flutter create --platforms=android --org zx.offical .
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build debug APK
+        run: flutter build apk --debug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: fairf-debug-apk
+          path: build/app/outputs/flutter-apk/app-debug.apk
