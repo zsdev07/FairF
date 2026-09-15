@@ -46,14 +46,16 @@ class PillButton extends StatelessWidget {
                   );
                 },
               ),
-              Text(
-                label,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w800,
-                  fontSize: 16,
-                  letterSpacing: 0.5,
-                  shadows: [Shadow(color: Colors.black87, blurRadius: 4, offset: Offset(0, 1))],
+              Center(
+                child: Text(
+                  label,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 16,
+                    letterSpacing: 0.5,
+                    shadows: [Shadow(color: Colors.black87, blurRadius: 4, offset: Offset(0, 1))],
+                  ),
                 ),
               ),
             ],
