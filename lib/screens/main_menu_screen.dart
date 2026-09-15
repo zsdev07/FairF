@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme/colors.dart';
 import '../widgets/pill_button.dart';
+import 'character_screen.dart';
 
 class MainMenuScreen extends StatefulWidget {
   const MainMenuScreen({super.key});
@@ -129,7 +130,9 @@ class _MainMenuScreenState extends State<MainMenuScreen> with SingleTickerProvid
                             label: 'Character',
                             width: 140,
                             onTap: () {
-                              // TODO: Characters screen
+                              Navigator.of(context).push(
+                                MaterialPageRoute(builder: (_) => const CharacterScreen()),
+                              );
                             },
                           ),
                         ],
