@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
-/// A button that stretches a small pixel-art pill sprite (from the Kenney-style
-/// UI sheet) to fit its label, using Flutter's 9-slice image stretching so the
-/// rounded/bordered edges stay crisp instead of smearing.
+/// A button built from a small pixel-art pill sprite. Uses BoxFit.cover
+/// inside a fixed-size ClipRRect rather than 9-slice stretching — simpler
+/// and can't silently render as invisible/blank the way a bad centerSlice
+/// region can.
 class PillButton extends StatelessWidget {
   final String assetPath;
   final String label;
@@ -27,26 +28,36 @@ class PillButton extends StatelessWidget {
       child: SizedBox(
         width: width,
         height: height,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Image(
-              image: AssetImage(assetPath),
-              fit: BoxFit.fill,
-              centerSlice: const Rect.fromLTWH(48, 0, 32, 128),
-              filterQuality: FilterQuality.none, // keep pixel-art crisp
-            ),
-            Text(
-              label,
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w800,
-                fontSize: 16,
-                letterSpacing: 0.5,
-                shadows: [Shadow(color: Colors.black54, blurRadius: 4, offset: Offset(0, 1))],
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(14),
+          child: Stack(
+            fit: StackFit.expand, // forces children to fill this exact box
+            alignment: Alignment.center,
+            children: [
+              Image(
+                image: AssetImage(assetPath),
+                fit: BoxFit.cover,
+                filterQuality: FilterQuality.none, // keep pixel-art crisp
+                errorBuilder: (context, error, stackTrace) {
+                  // Loud fallback — if you see a plain gray pill instead of
+                  // the sprite, double check the exact filename/case.
+                  return Container(
+                    color: Colors.grey.shade700,
+                  );
+                },
               ),
-            ),
-          ],
+              Text(
+                label,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w800,
+                  fontSize: 16,
+                  letterSpacing: 0.5,
+                  shadows: [Shadow(color: Colors.black87, blurRadius: 4, offset: Offset(0, 1))],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
