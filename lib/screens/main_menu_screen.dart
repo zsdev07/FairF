@@ -9,8 +9,9 @@ class MainMenuScreen extends StatefulWidget {
   State<MainMenuScreen> createState() => _MainMenuScreenState();
 }
 
-class _MainMenuScreenState extends State<MainMenuScreen> {
+class _MainMenuScreenState extends State<MainMenuScreen> with SingleTickerProviderStateMixin {
   bool _isLoading = true;
+  late final AnimationController _bobController;
 
   @override
   void initState() {
@@ -19,6 +20,19 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
       if (!mounted) return;
       setState(() => _isLoading = false);
     });
+
+    // Gentle idle float — cheap way to make a static render feel alive
+    // until real skeletal animation is wired up properly.
+    _bobController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _bobController.dispose();
+    super.dispose();
   }
 
   @override
@@ -42,14 +56,24 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
             SafeArea(
               child: Stack(
                 children: [
-                  // Centerpiece character render
+                  // Centerpiece character render — gentle idle bob
                   Center(
-                    child: Image.asset(
-                      'assets/character_default.png',
-                      height: 320,
-                      fit: BoxFit.contain,
-                      filterQuality: FilterQuality.none,
-                      errorBuilder: (context, error, stackTrace) => const SizedBox.shrink(),
+                    child: AnimatedBuilder(
+                      animation: _bobController,
+                      builder: (context, child) {
+                        final offset = 10 * (0.5 - (_bobController.value - 0.5).abs()) * 2;
+                        return Transform.translate(
+                          offset: Offset(0, -offset),
+                          child: child,
+                        );
+                      },
+                      child: Image.asset(
+                        'assets/character_default.png',
+                        height: 320,
+                        fit: BoxFit.contain,
+                        filterQuality: FilterQuality.none,
+                        errorBuilder: (context, error, stackTrace) => const SizedBox.shrink(),
+                      ),
                     ),
                   ),
 
